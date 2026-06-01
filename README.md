@@ -12,6 +12,24 @@ AI Interview Coach is an AI-powered interview preparation platform built with Re
 - Improvement recommendations
 - Responsive modern UI
 
+## Screenshots
+
+### Home Page
+![Home Page](screenshots/home.png)
+
+### User Authentication
+![Sign In](screenshots/signin.png)
+
+### Interview Session
+![Interview Session](screenshots/interview.png)
+
+### AI Interview Report
+![Interview Report](screenshots/report.png)
+
+### Detailed Feedback Analysis
+![Detailed Feedback](screenshots/feedback.png)
+
+
 ## Supported Professions
 
 - Software Engineers
