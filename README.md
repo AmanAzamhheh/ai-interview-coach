@@ -57,6 +57,6 @@ npm run dev
 
 ## Author
 
-Aman Azamhheh
+Aman Azam
 
 GitHub: https://github.com/AmanAzamhheh
