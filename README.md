@@ -59,4 +59,4 @@ npm run dev
 
 Aman Azam
 
-GitHub: https://github.com/AmanAzamhheh
+GitHub: https://github.com/Aman-Azam
