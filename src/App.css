@@ -507,3 +507,29 @@ textarea {
     font-size: 40px;
   }
 }
+.center .score {
+  display: block;
+  line-height: 1;
+  margin: 18px 0 22px;
+  position: relative;
+  z-index: 1;
+}
+
+.center .subtitle {
+  position: relative;
+  z-index: 2;
+  margin-top: 8px;
+  margin-bottom: 22px;
+}
+
+.center .primary {
+  position: relative;
+  z-index: 3;
+  margin-top: 8px;
+}
+
+@media (max-width: 700px) {
+  .center .score {
+    font-size: 72px;
+  }
+}

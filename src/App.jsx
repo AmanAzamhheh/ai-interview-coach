@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { generateAIQuestions } from "./gemini";
 import * as pdfjsLib from "pdfjs-dist";
 import pdfWorker from "pdfjs-dist/build/pdf.worker?url";
 import "./App.css";
@@ -199,6 +200,7 @@ export default function App() {
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState({});
   const [results, setResults] = useState([]);
+  const [loadingQuestions, setLoadingQuestions] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
   const [authMode, setAuthMode] = useState("signin");
   const [verificationCode, setVerificationCode] = useState("");
@@ -253,13 +255,33 @@ export default function App() {
     }
   }
 
-  function startInterview() {
-    setQuestions(generateQuestions(role, mode, cv));
-    setCurrent(0);
-    setAnswers({});
-    setResults([]);
-    setScreen("practice");
+  async function startInterview() {
+  setLoadingQuestions(true);
+
+  try {
+    const cvText = localStorage.getItem("cv_text") || "";
+
+    const aiQuestions = await generateAIQuestions(
+  role || "General Interview",
+  mode,
+  cvText
+);
+
+    setQuestions(aiQuestions);
+  } catch (error) {
+    console.error(error);
+
+    setQuestions(
+      generateQuestions(role, mode, cv)
+    );
   }
+
+  setCurrent(0);
+  setAnswers({});
+  setResults([]);
+  setScreen("practice");
+  setLoadingQuestions(false);
+}
 
   function submitAnswer() {
     const answer = answers[current] || "";
