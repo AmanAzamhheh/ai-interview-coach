@@ -1,16 +1,31 @@
 # AI Interview Coach
 
-AI Interview Coach is an AI-powered interview preparation platform built with React and Vite. It helps candidates practice interviews through CV-aware and role-specific questions, automated scoring, structured feedback, and improvement suggestions.
+AI Interview Coach is an AI-powered mock interview platform that helps job seekers prepare for interviews through resume-based question generation, role-specific interview modes, automated scoring, detailed feedback, and downloadable performance reports.
+
+## Live Demo
+
+https://interview-pre-hub.vercel.app/
+
+---
 
 ## Features
 
-- CV / Resume upload support
-- Profession-specific interview questions
-- Technical, Behavioral, and System Design modes
-- AI-style interview scoring
-- Structured feedback generation
-- Improvement recommendations
-- Responsive modern UI
+- AI-powered interview question generation using Gemini AI
+- CV / Resume upload and analysis
+- Role-specific interview preparation
+- Technical Interview mode
+- Behavioral Interview mode
+- System Design Interview mode
+- Text and Voice answer support
+- Automated interview scoring
+- Detailed AI-generated feedback
+- Performance breakdown by category
+- Progress tracking dashboard
+- Downloadable PDF interview reports
+- Modern responsive UI
+- Dark / Light mode support
+
+---
 
 ## Screenshots
 
@@ -29,52 +44,98 @@ AI Interview Coach is an AI-powered interview preparation platform built with Re
 ### Detailed Feedback Analysis
 ![Detailed Feedback](screenshots/feedback.png)
 
+---
 
-## Supported Professions
+## How It Works
 
-- Software Engineers
-- Doctors
-- Nurses
-- Pharmacists
-- Lawyers
-- Teachers
-- Accountants
-- Designers
-- Marketing Professionals
+1. Enter a target role.
+2. Select an interview mode (Technical, Behavioral, or System Design).
+3. Upload your CV / Resume.
+4. Gemini AI generates personalized interview questions based on your resume and selected role.
+5. Answer questions using text or voice.
+6. Receive an AI-generated interview score and feedback report.
+7. Review strengths, weaknesses, and improvement recommendations.
+8. Download your performance report as a PDF.
+
+---
+
+## Supported Interview Modes
+
+### Technical Interview
+Focuses on technical knowledge, programming concepts, problem solving, and role-specific technologies.
+
+### Behavioral Interview
+Evaluates communication, teamwork, leadership, adaptability, and workplace scenarios.
+
+### System Design Interview
+Assesses architecture, scalability, databases, APIs, and system design decision-making.
+
+---
 
 ## Tech Stack
 
+### Frontend
 - React
 - Vite
 - JavaScript
 - CSS
 
-## How It Works
+### AI
+- Google Gemini API
 
-1. Upload a CV or resume.
-2. The application analyzes the resume content.
-3. The system detects the candidate's profession and background.
-4. Customized interview questions are generated.
-5. Responses are evaluated and scored.
-6. Feedback and improvement suggestions are displayed.
+### Additional Libraries
+- PDF.js
+- jsPDF
 
-## Run Locally
+### Deployment
+- Vercel
 
-```bash
-npm install
-npm run dev
-```
+---
+
+## Installation
+
+Clone the repository:
+
+bash git clone https://github.com/Aman-Azam/AI-Interview-Coach.git 
+
+Navigate to the project:
+
+bash cd AI-Interview-Coach 
+
+Install dependencies:
+
+bash npm install 
+
+Run locally:
+
+bash npm run dev 
+
+---
+
+## Environment Variables
+
+Create a .env file in the root directory:
+
+env VITE_GEMINI_API_KEY=your_gemini_api_key 
+
+---
 
 ## Future Improvements
 
-- OpenAI API integration
-- Voice-based mock interviews
-- PDF interview reports
-- User accounts and progress tracking
-- Speech-to-text support
+- User authentication with persistent accounts
+- Cloud database integration
+- Interview history analytics
+- Real-time AI feedback during interviews
+- Enhanced speech-to-text support
+- Multi-language interview support
+- Recruiter dashboard
+
+---
 
 ## Author
 
 Aman Azam
 
 GitHub: https://github.com/Aman-Azam
+
+Live Demo: https://interview-pre-hub.vercel.app/
