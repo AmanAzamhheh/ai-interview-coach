@@ -1,20 +1,28 @@
 # AI Interview Coach
 
-AI Interview Coach is a recruiter-ready web application that helps candidates practice interviews through role-based questions, instant scoring, structured feedback, and an improvement plan.
-
-## Live Demo
-
-Coming soon.
+AI Interview Coach is an AI-powered interview preparation platform built with React and Vite. It helps candidates practice interviews through CV-aware and role-specific questions, automated scoring, structured feedback, and improvement suggestions.
 
 ## Features
 
-- Role-based interview preparation
-- Resume/CV input area
-- Technical and behavioral interview flow
-- Interview score report
-- Personalized feedback
-- Improvement plan
-- Clean responsive UI
+- CV / Resume upload support
+- Profession-specific interview questions
+- Technical, Behavioral, and System Design modes
+- AI-style interview scoring
+- Structured feedback generation
+- Improvement recommendations
+- Responsive modern UI
+
+## Supported Professions
+
+- Software Engineers
+- Doctors
+- Nurses
+- Pharmacists
+- Lawyers
+- Teachers
+- Accountants
+- Designers
+- Marketing Professionals
 
 ## Tech Stack
 
@@ -23,16 +31,32 @@ Coming soon.
 - JavaScript
 - CSS
 
-## What This Project Demonstrates
+## How It Works
 
-- Frontend development with React
-- Product thinking for AI-powered tools
-- Interview evaluation logic
-- Clean UI and user experience design
-- Portfolio-ready project structure
+1. Upload a CV or resume.
+2. The application analyzes the resume content.
+3. The system detects the candidate's profession and background.
+4. Customized interview questions are generated.
+5. Responses are evaluated and scored.
+6. Feedback and improvement suggestions are displayed.
 
-## How to Run Locally
+## Run Locally
 
 ```bash
 npm install
 npm run dev
+```
+
+## Future Improvements
+
+- OpenAI API integration
+- Voice-based mock interviews
+- PDF interview reports
+- User accounts and progress tracking
+- Speech-to-text support
+
+## Author
+
+Aman Azamhheh
+
+GitHub: https://github.com/AmanAzamhheh
