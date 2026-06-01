@@ -5,113 +5,111 @@ import "./App.css";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 
-const professions = {
-  tech: ["python", "react", "javascript", "html", "css", "github", "cybersecurity", "authentication", "software", "developer", "programming"],
-  doctor: ["doctor", "medical", "patient", "hospital", "clinical", "healthcare", "diagnosis", "treatment"],
-  nurse: ["nurse", "nursing", "patient care", "hospital", "clinical"],
+const professionKeywords = {
+  software: ["software", "developer", "programming", "react", "javascript", "python", "api", "frontend", "backend", "github", "cybersecurity"],
+  doctor: ["doctor", "medical", "patient", "clinical", "hospital", "diagnosis", "treatment", "healthcare"],
+  nurse: ["nurse", "nursing", "patient care", "ward", "clinical", "healthcare"],
   pharmacist: ["pharmacist", "pharmacy", "medication", "prescription", "drug"],
-  lawyer: ["lawyer", "legal", "law", "case", "court", "contract"],
-  teacher: ["teacher", "teaching", "education", "classroom", "student"],
-  accountant: ["accountant", "accounting", "finance", "audit", "tax", "budget"],
-  engineer: ["engineer", "engineering", "civil", "mechanical", "electrical"],
-  designer: ["designer", "design", "figma", "photoshop", "canva", "ui", "ux"],
-  marketing: ["marketing", "campaign", "seo", "branding", "social media"],
+  lawyer: ["lawyer", "legal", "law", "court", "case", "contract", "client"],
+  teacher: ["teacher", "teaching", "education", "classroom", "student", "lesson"],
+  accountant: ["accountant", "accounting", "audit", "tax", "finance", "budget", "invoice"],
+  engineer: ["engineer", "engineering", "mechanical", "civil", "electrical", "system"],
+  designer: ["designer", "design", "figma", "ui", "ux", "branding", "photoshop"],
+  marketing: ["marketing", "campaign", "seo", "brand", "social media", "analytics"],
+};
+
+const questionBanks = {
+  software: [
+    "Tell me about a technical project from your CV and the problem it solved.",
+    "Explain a technical challenge you faced and how you solved it.",
+    "How would you improve the performance, security, or scalability of one of your projects?",
+    "What tools or technologies from your CV are you most confident using?",
+    "Describe a time you debugged or fixed a difficult issue.",
+  ],
+  doctor: [
+    "Tell me about a challenging patient or clinical situation you handled.",
+    "How do you communicate complex medical information clearly?",
+    "How do you manage pressure in a healthcare environment?",
+    "How do you ensure patient safety and accurate documentation?",
+    "What healthcare experience from your CV are you most proud of?",
+  ],
+  nurse: [
+    "Describe a difficult patient care situation and how you handled it.",
+    "How do you prioritize patients during a busy shift?",
+    "Tell me about a time you worked with a healthcare team.",
+    "How do you communicate with patients and families professionally?",
+    "How do you stay calm under pressure in nursing?",
+  ],
+  pharmacist: [
+    "How do you ensure medication safety and accuracy?",
+    "Describe how you would handle a prescription error.",
+    "How do you explain medication instructions clearly to patients?",
+    "Tell me about your experience with pharmacy systems or patient care.",
+    "How would you handle a possible drug interaction concern?",
+  ],
+  lawyer: [
+    "Describe a legal case or matter that challenged your analytical skills.",
+    "How do you prepare for a legal argument or client matter?",
+    "Tell me about a time you explained complex legal information clearly.",
+    "How do you manage deadlines and legal documentation?",
+    "How do you handle client confidentiality?",
+  ],
+  teacher: [
+    "How do you keep students engaged during lessons?",
+    "Describe a time you helped a student understand a difficult concept.",
+    "How do you adapt your teaching style for different learners?",
+    "How do you manage classroom challenges?",
+    "What teaching experience from your CV are you most proud of?",
+  ],
+  accountant: [
+    "Tell me about your experience handling financial records or reports.",
+    "How do you ensure accuracy when working with financial data?",
+    "Describe a time you found or prevented an error in financial work.",
+    "How do you manage deadlines during reporting or audit periods?",
+    "What accounting or finance skill from your CV is your strongest?",
+  ],
+  engineer: [
+    "Tell me about an engineering project you worked on.",
+    "Describe a technical problem you solved and how you approached it.",
+    "How do you balance safety, cost, and performance in engineering decisions?",
+    "What engineering tool or method from your CV are you most confident using?",
+    "How do you test and validate your engineering work?",
+  ],
+  designer: [
+    "Walk me through your design process from concept to completion.",
+    "How do you balance creativity with user needs?",
+    "Tell me about a design project you are proud of.",
+    "How do you use feedback to improve a design?",
+    "What design tools from your CV do you use most effectively?",
+  ],
+  marketing: [
+    "Describe a marketing campaign you worked on and its results.",
+    "How do you measure whether a campaign is successful?",
+    "Tell me about a time you improved engagement, reach, or conversions.",
+    "How do you understand a target audience?",
+    "What marketing or branding experience from your CV are you most proud of?",
+  ],
+  general: [
+    "Tell me about yourself and your background.",
+    "Why are you interested in this role?",
+    "Tell me about a project or experience you are proud of.",
+    "Describe a time you solved a difficult problem independently.",
+    "Why should we choose you for this opportunity?",
+  ],
 };
 
 function detectProfession(text) {
   const lower = text.toLowerCase();
-
-  for (const [profession, keywords] of Object.entries(professions)) {
-    if (keywords.some((word) => lower.includes(word))) return profession;
+  for (const [profession, words] of Object.entries(professionKeywords)) {
+    if (words.some((word) => lower.includes(word))) return profession;
   }
-
   return "general";
 }
 
 function generateQuestions(role, mode, cvName) {
   const cvText = localStorage.getItem("cv_text") || "";
-  const combined = `${role} ${cvName} ${cvText}`.toLowerCase();
+  const combined = `${role} ${cvName} ${cvText}`;
   const profession = detectProfession(combined);
-
-  const banks = {
-    tech: [
-      "Tell me about a technical project from your CV and the problem it solved.",
-      "Your CV mentions technical skills. Explain one project where you used them.",
-      "How would you improve the security, performance, or scalability of one of your projects?",
-      "Explain a technical challenge you faced and how you solved it.",
-      "What tools or technologies from your CV are you most confident using?",
-    ],
-    doctor: [
-      "Tell me about a challenging patient case or medical situation you handled.",
-      "How do you communicate complex medical information to patients?",
-      "How do you manage pressure in a clinical environment?",
-      "How do you ensure patient safety and accurate documentation?",
-      "What healthcare experience from your CV are you most proud of?",
-    ],
-    nurse: [
-      "Describe a difficult patient care situation and how you handled it.",
-      "How do you prioritize patients during a busy shift?",
-      "Tell me about a time you worked with a healthcare team.",
-      "How do you communicate with patients and families professionally?",
-      "How do you stay calm under pressure in nursing?",
-    ],
-    pharmacist: [
-      "How do you ensure medication safety and accuracy?",
-      "Describe how you would handle a prescription error.",
-      "How do you explain medication instructions clearly to patients?",
-      "Tell me about your experience with pharmacy systems or patient care.",
-      "How would you handle a possible drug interaction concern?",
-    ],
-    lawyer: [
-      "Describe a legal case or matter that challenged your analytical skills.",
-      "How do you prepare for a legal argument or client matter?",
-      "Tell me about a time you explained complex legal information clearly.",
-      "How do you manage deadlines and legal documentation?",
-      "How do you handle client confidentiality?",
-    ],
-    teacher: [
-      "How do you keep students engaged during lessons?",
-      "Describe a time you helped a student understand a difficult concept.",
-      "How do you adapt your teaching style for different learners?",
-      "How do you manage classroom challenges?",
-      "What teaching experience from your CV are you most proud of?",
-    ],
-    accountant: [
-      "Tell me about your experience handling financial records or reports.",
-      "How do you ensure accuracy when working with financial data?",
-      "Describe a time you found or prevented an error in financial work.",
-      "How do you manage deadlines during reporting or audit periods?",
-      "What accounting or finance skill from your CV is your strongest?",
-    ],
-    engineer: [
-      "Tell me about an engineering project you worked on.",
-      "Describe a technical problem you solved and how you approached it.",
-      "How do you balance safety, cost, and performance in engineering decisions?",
-      "What engineering tool or method from your CV are you most confident using?",
-      "How do you test and validate your engineering work?",
-    ],
-    designer: [
-      "Walk me through your design process from concept to completion.",
-      "How do you balance creativity with user needs?",
-      "Tell me about a design project you are proud of.",
-      "How do you use feedback to improve a design?",
-      "What design tools from your CV do you use most effectively?",
-    ],
-    marketing: [
-      "Describe a marketing campaign you worked on and its results.",
-      "How do you measure whether a campaign is successful?",
-      "Tell me about a time you improved engagement, reach, or conversions.",
-      "How do you understand a target audience?",
-      "What marketing or branding experience from your CV are you most proud of?",
-    ],
-    general: [
-      "Tell me about yourself and your background.",
-      `Why are you interested in ${role || "this role"}?`,
-      cvName ? `Your uploaded resume is ${cvName}. Tell me about one experience from it.` : "Tell me about a project or achievement you are proud of.",
-      "Describe a time you solved a difficult problem.",
-      "Why should we choose you for this opportunity?",
-    ],
-  };
 
   if (mode === "system") {
     return [
@@ -123,21 +121,38 @@ function generateQuestions(role, mode, cvName) {
     ];
   }
 
-  return banks[profession] || banks.general;
+  if (mode === "technical") {
+    return questionBanks[profession] || questionBanks.general;
+  }
+
+  return [
+    "Tell me about yourself and your background.",
+    `Why are you interested in ${role || "this role"}?`,
+    cvName
+      ? `Your uploaded resume is ${cvName}. Tell me about one project or experience from it.`
+      : "Tell me about a project or experience you are proud of.",
+    "Describe a time you solved a difficult problem independently.",
+    "Why should we choose you for this opportunity?",
+  ];
+}
+
+function countWords(text) {
+  return text.trim().split(/\s+/).filter(Boolean).length;
 }
 
 function analyzeAnswer(answer) {
-  const words = answer.trim().split(/\s+/).filter(Boolean).length;
-  const hasProject = /project|built|created|developed|implemented|designed|experience/i.test(answer);
-  const hasTech = /react|python|api|database|security|patient|legal|finance|marketing|teaching|design|engineering/i.test(answer);
-  const hasImpact = /improved|increased|reduced|result|impact|users|accuracy|performance|successful/i.test(answer);
-  const hasStructure = /first|then|finally|because|therefore|result|challenge|solution/i.test(answer);
+  const words = countWords(answer);
+  const hasExample = /project|experience|built|created|developed|implemented|designed|managed|handled/i.test(answer);
+  const hasTools = /react|javascript|python|api|database|security|patient|legal|finance|marketing|teaching|design|engineering|excel|figma|node|sql/i.test(answer);
+  const hasImpact = /improved|increased|reduced|saved|helped|result|impact|users|accuracy|performance|successful|efficient/i.test(answer);
+  const hasStructure = /first|second|then|finally|because|therefore|situation|task|action|result|challenge|solution/i.test(answer);
+  const hasConfidence = words > 45;
 
-  const communication = Math.min(95, 35 + Math.min(words, 100) * 0.45);
-  const technical = Math.min(95, 45 + (hasTech ? 30 : 0) + (hasProject ? 10 : 0));
-  const structure = Math.min(95, 45 + (hasStructure ? 30 : 0) + (words > 50 ? 10 : 0));
-  const impact = Math.min(95, 40 + (hasImpact ? 35 : 0) + (hasProject ? 10 : 0));
-  const confidence = Math.min(95, 45 + (words > 40 ? 20 : 0) + (words > 80 ? 15 : 0));
+  const communication = Math.min(96, 35 + Math.min(words, 120) * 0.45);
+  const technical = Math.min(96, 42 + (hasTools ? 28 : 0) + (hasExample ? 12 : 0));
+  const structure = Math.min(96, 45 + (hasStructure ? 30 : 0) + (words > 60 ? 10 : 0));
+  const impact = Math.min(96, 38 + (hasImpact ? 35 : 0) + (hasExample ? 10 : 0));
+  const confidence = Math.min(96, 45 + (hasConfidence ? 25 : 0) + (words > 90 ? 10 : 0));
 
   const overall = Math.round(
     communication * 0.25 +
@@ -155,13 +170,14 @@ function analyzeAnswer(answer) {
     impact: Math.round(impact),
     confidence: Math.round(confidence),
     strengths: [
-      hasProject ? "Good use of experience-based examples." : "You attempted to answer the question clearly.",
-      hasTech ? "Relevant field-specific knowledge was included." : "The answer can be improved with more specific terminology.",
+      hasExample ? "Good use of experience-based examples." : "You answered the question directly.",
+      hasTools ? "Relevant field-specific details were included." : "Your answer can be improved with more specific tools or methods.",
+      hasStructure ? "The answer has a clear structure." : "The answer would be stronger with clearer structure.",
     ],
-    weaknesses: [
-      hasStructure ? "Structure is clear." : "Use STAR: Situation, Task, Action, Result.",
-      hasImpact ? "Impact was explained." : "Add measurable results or outcomes.",
-      words < 40 ? "Answer is short. Add more detail." : "Good answer length.",
+    improvements: [
+      !hasImpact ? "Add measurable results or outcomes." : "Good impact explanation.",
+      words < 55 ? "Expand the answer with more detail." : "Good answer length.",
+      !hasStructure ? "Use STAR structure: Situation, Task, Action, Result." : "Keep the structure clear and concise.",
     ],
   };
 }
@@ -177,22 +193,22 @@ function saveAccounts(accounts) {
 export default function App() {
   const [screen, setScreen] = useState("home");
   const [role, setRole] = useState("");
-  const [cv, setCv] = useState("");
   const [mode, setMode] = useState("behavioral");
+  const [cv, setCv] = useState("");
   const [questions, setQuestions] = useState([]);
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState({});
   const [results, setResults] = useState([]);
   const [showAuth, setShowAuth] = useState(false);
   const [authMode, setAuthMode] = useState("signin");
-  const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode") !== "false");
-  const [user, setUser] = useState(() => JSON.parse(localStorage.getItem("aic_current_user") || "null"));
   const [verificationCode, setVerificationCode] = useState("");
   const [enteredCode, setEnteredCode] = useState("");
+  const [darkMode, setDarkMode] = useState(localStorage.getItem("aic_dark") !== "false");
+  const [user, setUser] = useState(() => JSON.parse(localStorage.getItem("aic_user") || "null"));
 
   useEffect(() => {
     document.body.classList.toggle("light", !darkMode);
-    localStorage.setItem("darkMode", String(darkMode));
+    localStorage.setItem("aic_dark", String(darkMode));
   }, [darkMode]);
 
   const historyKey = user ? `aic_history_${user.email}` : "aic_history_guest";
@@ -204,10 +220,12 @@ export default function App() {
   }, [results]);
 
   const stats = useMemo(() => {
-    const total = history.length;
-    const best = total ? Math.max(...history.map((h) => h.score)) : 0;
-    const avg = total ? Math.round(history.reduce((s, h) => s + h.score, 0) / total) : 0;
-    return { total, best, avg };
+    if (!history.length) return { total: 0, avg: 0, best: 0 };
+    return {
+      total: history.length,
+      avg: Math.round(history.reduce((s, h) => s + h.score, 0) / history.length),
+      best: Math.max(...history.map((h) => h.score)),
+    };
   }, [history]);
 
   async function handleCvUpload(file) {
@@ -216,8 +234,8 @@ export default function App() {
 
     try {
       if (file.type === "application/pdf") {
-        const arrayBuffer = await file.arrayBuffer();
-        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        const buffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
         let text = "";
 
         for (let i = 1; i <= pdf.numPages; i++) {
@@ -227,6 +245,8 @@ export default function App() {
         }
 
         localStorage.setItem("cv_text", text);
+      } else {
+        localStorage.setItem("cv_text", file.name);
       }
     } catch {
       localStorage.setItem("cv_text", file.name);
@@ -243,22 +263,32 @@ export default function App() {
 
   function submitAnswer() {
     const answer = answers[current] || "";
-    const updated = [...results, { question: questions[current], answer, analysis: analyzeAnswer(answer) }];
-    setResults(updated);
+    const updatedResults = [
+      ...results,
+      {
+        question: questions[current],
+        answer,
+        analysis: analyzeAnswer(answer),
+      },
+    ];
+
+    setResults(updatedResults);
 
     if (current < questions.length - 1) {
       setCurrent(current + 1);
       return;
     }
 
-    const finalScore = Math.round(updated.reduce((sum, r) => sum + r.analysis.overall, 0) / updated.length);
+    const finalScore = Math.round(updatedResults.reduce((s, r) => s + r.analysis.overall, 0) / updatedResults.length);
+
     const session = {
       id: Date.now(),
       role: role || "General Interview",
       mode,
+      cv: cv || "No CV uploaded",
       score: finalScore,
       date: new Date().toLocaleString(),
-      results: updated,
+      results: updatedResults,
     };
 
     localStorage.setItem(historyKey, JSON.stringify([session, ...history]));
@@ -267,6 +297,7 @@ export default function App() {
 
   function startVoice() {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
     if (!SpeechRecognition) {
       alert("Voice input is not supported in this browser.");
       return;
@@ -281,76 +312,77 @@ export default function App() {
   }
 
   function createAccount() {
-    const name = document.getElementById("signup-name")?.value || "";
-    const email = document.getElementById("signup-email")?.value || "";
-    const password = document.getElementById("signup-password")?.value || "";
-    const confirm = document.getElementById("signup-confirm")?.value || "";
+    const name = document.getElementById("signup-name")?.value.trim();
+    const email = document.getElementById("signup-email")?.value.trim();
+    const password = document.getElementById("signup-password")?.value;
+    const confirm = document.getElementById("signup-confirm")?.value;
 
-    if (!name || !email || !password) return alert("Please fill all fields.");
+    if (!name || !email || !password) return alert("Fill all fields.");
     if (password.length < 6) return alert("Password must be at least 6 characters.");
     if (password !== confirm) return alert("Passwords do not match.");
 
+    const accounts = getAccounts();
+    if (accounts[email]) return alert("Account already exists.");
+
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     setVerificationCode(code);
-    alert(`Demo verification code: ${code}`);
-    setAuthMode("verify");
 
-    const accounts = getAccounts();
     accounts[email] = { name, email, password, verified: false };
     saveAccounts(accounts);
+
+    alert(`Demo email verification code: ${code}`);
+    setAuthMode("verify");
   }
 
   function verifyEmail() {
-    const email = document.getElementById("verify-email")?.value || "";
-
-    if (enteredCode !== verificationCode) return alert("Incorrect verification code.");
-
+    const email = document.getElementById("verify-email")?.value.trim();
     const accounts = getAccounts();
+
     if (!accounts[email]) return alert("Account not found.");
+    if (enteredCode !== verificationCode) return alert("Incorrect code.");
 
     accounts[email].verified = true;
     saveAccounts(accounts);
 
-    localStorage.setItem("aic_current_user", JSON.stringify(accounts[email]));
+    localStorage.setItem("aic_user", JSON.stringify(accounts[email]));
     setUser(accounts[email]);
     setShowAuth(false);
-    alert("Email verified. Account created successfully.");
+    alert("Email verified successfully.");
   }
 
   function signIn() {
-    const email = document.getElementById("auth-email")?.value || "";
-    const password = document.getElementById("auth-password")?.value || "";
+    const email = document.getElementById("signin-email")?.value.trim();
+    const password = document.getElementById("signin-password")?.value;
     const accounts = getAccounts();
-    const account = accounts[email];
 
-    if (!account) return alert("No account found.");
-    if (account.password !== password) return alert("Incorrect password.");
-    if (!account.verified) return alert("Please verify your email first.");
+    if (!accounts[email]) return alert("Account not found.");
+    if (accounts[email].password !== password) return alert("Incorrect password.");
+    if (!accounts[email].verified) return alert("Please verify your email first.");
 
-    localStorage.setItem("aic_current_user", JSON.stringify(account));
-    setUser(account);
+    localStorage.setItem("aic_user", JSON.stringify(accounts[email]));
+    setUser(accounts[email]);
     setShowAuth(false);
   }
 
   function signOut() {
-    localStorage.removeItem("aic_current_user");
+    localStorage.removeItem("aic_user");
     setUser(null);
     setScreen("home");
   }
 
-  function resetPractice() {
+  function resetInterview() {
     setScreen("home");
     setQuestions([]);
-    setResults([]);
-    setAnswers({});
     setCurrent(0);
+    setAnswers({});
+    setResults([]);
   }
 
   return (
     <div className="page">
-      <nav className="navbar load-in">
+      <nav className="navbar">
         <div className="brand">
-          <img src="/logo.png" alt="AI Interview Coach logo" className="logo" />
+          <img src="/logo.png" alt="AI Interview Coach" className="logo" />
           <div>
             <h1>AI Interview Coach</h1>
             <p>Practice smarter. Interview with confidence.</p>
@@ -358,36 +390,33 @@ export default function App() {
         </div>
 
         <div className="nav-actions">
-          <button className="nav-btn" onClick={() => setScreen("home")}>Home</button>
-          <button className="nav-btn" onClick={() => setScreen("dashboard")}>Dashboard</button>
-          <button className="nav-btn" onClick={() => setScreen("admin")}>Admin</button>
-          <button className="nav-btn" onClick={() => setDarkMode(!darkMode)}>
-            {darkMode ? "Light" : "Dark"}
-          </button>
+          <button onClick={() => setScreen("home")}>Home</button>
+          <button onClick={() => setScreen("dashboard")}>Dashboard</button>
+          <button onClick={() => setScreen("admin")}>Admin</button>
+          <button onClick={() => setDarkMode(!darkMode)}>{darkMode ? "Light" : "Dark"}</button>
           {user ? (
-            <button className="main-btn small glow-btn" onClick={signOut}>{user.name}</button>
+            <button className="primary small" onClick={signOut}>{user.name}</button>
           ) : (
-            <button className="main-btn small glow-btn" onClick={() => setShowAuth(true)}>Sign In</button>
+            <button className="primary small" onClick={() => setShowAuth(true)}>Sign In</button>
           )}
         </div>
       </nav>
 
       {showAuth && (
         <div className="modal-backdrop">
-          <div className="modal pop-modal">
+          <div className="modal">
             {authMode === "signin" && (
               <>
                 <p className="tag">Sign In</p>
                 <h2>Welcome back</h2>
-                <input id="auth-email" type="email" placeholder="Email Address" />
-                <input id="auth-password" type="password" placeholder="Password" />
+                <input id="signin-email" placeholder="Email Address" />
+                <input id="signin-password" type="password" placeholder="Password" />
                 <div className="actions">
                   <button className="secondary" onClick={() => setShowAuth(false)}>Cancel</button>
-                  <button className="main-btn glow-btn" onClick={signIn}>Sign In</button>
+                  <button className="primary" onClick={signIn}>Sign In</button>
                 </div>
-                <p className="auth-switch">
-                  Don’t have an account?{" "}
-                  <button onClick={() => setAuthMode("signup")}>Create an account</button>
+                <p className="small-text">
+                  Don’t have an account? <button onClick={() => setAuthMode("signup")}>Create account</button>
                 </p>
               </>
             )}
@@ -395,30 +424,26 @@ export default function App() {
             {authMode === "signup" && (
               <>
                 <p className="tag">Create Account</p>
-                <h2>Join AI Interview Coach</h2>
+                <h2>Start tracking progress</h2>
                 <input id="signup-name" placeholder="Full Name" />
-                <input id="signup-email" type="email" placeholder="Email Address" />
+                <input id="signup-email" placeholder="Email Address" />
                 <input id="signup-password" type="password" placeholder="Password" />
                 <input id="signup-confirm" type="password" placeholder="Confirm Password" />
                 <div className="actions">
                   <button className="secondary" onClick={() => setShowAuth(false)}>Cancel</button>
-                  <button className="main-btn glow-btn" onClick={createAccount}>Create Account</button>
+                  <button className="primary" onClick={createAccount}>Create Account</button>
                 </div>
-                <p className="auth-switch">
-                  Already have an account?{" "}
-                  <button onClick={() => setAuthMode("signin")}>Sign in</button>
-                </p>
               </>
             )}
 
             {authMode === "verify" && (
               <>
                 <p className="tag">Email Verification</p>
-                <h2>Verify your email</h2>
-                <p className="muted">Enter the demo verification code shown in the alert.</p>
-                <input id="verify-email" type="email" placeholder="Email Address" />
+                <h2>Verify your account</h2>
+                <p className="muted">This demo shows the verification code in an alert.</p>
+                <input id="verify-email" placeholder="Email Address" />
                 <input value={enteredCode} onChange={(e) => setEnteredCode(e.target.value)} placeholder="Verification Code" />
-                <button className="main-btn glow-btn" onClick={verifyEmail}>Verify Email</button>
+                <button className="primary full" onClick={verifyEmail}>Verify Email</button>
               </>
             )}
           </div>
@@ -427,17 +452,17 @@ export default function App() {
 
       {screen === "home" && (
         <main className="hero">
-          <section className="panel hero-panel reveal">
+          <section className="panel hero-panel">
             <p className="tag">AI-style mock interview platform</p>
             <h2>Practice interviews with scoring, reports, and progress tracking.</h2>
             <p className="subtitle">
-              Upload your CV, generate profession-specific questions, practice interviews, and receive detailed performance feedback.
+              Upload your CV, generate role-specific interview questions, answer with text or voice, and receive a detailed performance report.
             </p>
 
-            <div className="grid-form">
+            <div className="form-grid">
               <label>
                 Target Role
-                <input value={role} onChange={(e) => setRole(e.target.value)} placeholder="Example: Cybersecurity Intern, Doctor, Teacher..." />
+                <input value={role} onChange={(e) => setRole(e.target.value)} placeholder="Example: Cybersecurity Intern" />
               </label>
 
               <label>
@@ -453,61 +478,62 @@ export default function App() {
                 Upload CV / Resume
                 <div className="upload-box">
                   <input type="file" accept=".pdf,.doc,.docx" onChange={(e) => handleCvUpload(e.target.files[0])} />
-                  <div>
-                    <strong>{cv || "Click to upload your CV / Resume"}</strong>
-                    <p>Accepted formats: PDF, DOC, DOCX</p>
-                  </div>
+                  <strong>{cv || "Click to upload your CV / Resume"}</strong>
+                  <p>Accepted formats: PDF, DOC, DOCX</p>
                 </div>
               </label>
             </div>
 
-            <button className="main-btn glow-btn" onClick={startInterview}>Start Interview</button>
+            <button className="primary" onClick={startInterview}>Start Interview</button>
           </section>
 
-          <section className="side">
-            <div className="card preview-card reveal delay-1">
+          <aside className="side">
+            <div className="card">
               <p className="mini">Live Report Preview</p>
-              <h3><CountUp target={87} />/100</h3>
+              <h3>87/100</h3>
               <Progress label="Communication" value={88} />
               <Progress label="Technical Depth" value={82} />
               <Progress label="Structure" value={91} />
             </div>
-            <div className="card reveal delay-2"><span>01</span><h3>Previous Scores</h3><p>Track your interview history per account.</p></div>
-            <div className="card reveal delay-3"><span>02</span><h3>PDF Reports</h3><p>Download or print your interview report instantly.</p></div>
-          </section>
+            <Feature number="01" title="Progress Tracking" text="Save interview history and compare previous scores." />
+            <Feature number="02" title="PDF Reports" text="Print or save your score report as a PDF." />
+          </aside>
         </main>
       )}
 
       {screen === "practice" && (
-        <main className="panel practice reveal">
+        <main className="panel practice">
           <p className="tag">Question {current + 1} of {questions.length}</p>
           <h2>{questions[current]}</h2>
-          <textarea className="answer" value={answers[current] || ""} onChange={(e) => setAnswers({ ...answers, [current]: e.target.value })} placeholder="Type your answer here..." />
+          <textarea
+            value={answers[current] || ""}
+            onChange={(e) => setAnswers({ ...answers, [current]: e.target.value })}
+            placeholder="Type your answer here. Use STAR: Situation, Task, Action, Result."
+          />
           <div className="actions">
             <button className="secondary" onClick={startVoice}>Use Voice</button>
-            <button className="secondary" onClick={resetPractice}>Restart</button>
-            <button className="main-btn glow-btn" onClick={submitAnswer}>
-              {current === questions.length - 1 ? "Finish Interview" : "Submit Answer"}
-            </button>
+            <button className="secondary" onClick={resetInterview}>Restart</button>
+            <button className="primary" onClick={submitAnswer}>{current === questions.length - 1 ? "Finish Interview" : "Submit Answer"}</button>
           </div>
         </main>
       )}
 
       {screen === "results" && (
         <main className="results">
-          <section className="panel center reveal">
+          <section className="panel center">
             <p className="tag">Professional AI Report</p>
             <h2>Your Interview Score</h2>
-            <div className="score"><CountUp target={average} />/100</div>
-            <button className="main-btn glow-btn" onClick={() => window.print()}>Download / Print PDF Report</button>
+            <div className="score">{average}/100</div>
+            <p className="subtitle">{average >= 80 ? "Excellent performance. Keep refining examples and measurable impact." : average >= 65 ? "Strong performance. Add sharper examples and clearer outcomes." : "Good start. Use more structure, detail, and specific examples."}</p>
+            <button className="primary" onClick={() => window.print()}>Download / Print PDF Report</button>
           </section>
 
-          <section className="report-layout">
+          <section className="report-grid">
             <div className="panel">
               <h3>Score Breakdown</h3>
               <Progress label="Communication" value={avgMetric(results, "communication")} />
               <Progress label="Technical Depth" value={avgMetric(results, "technical")} />
-              <Progress label="Structure" value={avgMetric(results, "structure")} />
+              <Progress label="Answer Structure" value={avgMetric(results, "structure")} />
               <Progress label="Impact" value={avgMetric(results, "impact")} />
               <Progress label="Confidence" value={avgMetric(results, "confidence")} />
             </div>
@@ -515,10 +541,10 @@ export default function App() {
             <div className="panel">
               <h3>Recommended Next Steps</h3>
               <ul>
-                <li>Use STAR structure.</li>
-                <li>Add measurable impact.</li>
-                <li>Mention tools, methods, and results.</li>
-                <li>Practice weak areas from your score breakdown.</li>
+                <li>Use STAR structure for every answer.</li>
+                <li>Add measurable outcomes and impact.</li>
+                <li>Mention tools, methods, and specific examples.</li>
+                <li>Practice weaker categories from your score breakdown.</li>
               </ul>
             </div>
           </section>
@@ -526,38 +552,46 @@ export default function App() {
           <section className="result-grid">
             {results.map((r, i) => (
               <div className="panel result-card" key={i}>
-                <div className="result-top"><span>Question {i + 1}</span><strong>{r.analysis.overall}/100</strong></div>
+                <div className="result-top">
+                  <span>Question {i + 1}</span>
+                  <strong>{r.analysis.overall}/100</strong>
+                </div>
                 <h3>{r.question}</h3>
                 <p><b>Strengths:</b></p>
                 <ul>{r.analysis.strengths.map((s, idx) => <li key={idx}>{s}</li>)}</ul>
                 <p><b>Improvements:</b></p>
-                <ul>{r.analysis.weaknesses.map((w, idx) => <li key={idx}>{w}</li>)}</ul>
+                <ul>{r.analysis.improvements.map((s, idx) => <li key={idx}>{s}</li>)}</ul>
               </div>
             ))}
           </section>
+
+          <button className="primary center-btn" onClick={resetInterview}>Start Another Interview</button>
         </main>
       )}
 
       {screen === "dashboard" && (
-        <main className="dashboard-wrap">
+        <main className="dashboard">
           <section className="stat-grid">
             <Stat title="Total Interviews" value={stats.total} />
             <Stat title="Average Score" value={`${stats.avg}/100`} />
             <Stat title="Best Score" value={`${stats.best}/100`} />
           </section>
 
-          <section className="panel reveal">
+          <section className="panel">
             <p className="tag">Previous Scores</p>
-            <h2>Your Interview History</h2>
+            <h2>Interview History</h2>
             {history.length === 0 ? (
-              <div className="empty"><h3>No sessions yet</h3><p>Start your first interview to track your progress.</p></div>
+              <div className="empty">
+                <h3>No interviews yet</h3>
+                <p>Start an interview to track your progress.</p>
+              </div>
             ) : (
-              history.map((h) => (
-                <div className="history-row" key={h.id}>
-                  <strong>{h.role}</strong>
-                  <span>{h.mode}</span>
-                  <span>{h.score}/100</span>
-                  <small>{h.date}</small>
+              history.map((item) => (
+                <div className="history-row" key={item.id}>
+                  <strong>{item.role}</strong>
+                  <span>{item.mode}</span>
+                  <span>{item.score}/100</span>
+                  <small>{item.date}</small>
                 </div>
               ))
             )}
@@ -566,16 +600,16 @@ export default function App() {
       )}
 
       {screen === "admin" && (
-        <main className="dashboard-wrap">
-          <section className="panel reveal">
+        <main className="dashboard">
+          <section className="panel">
             <p className="tag">Admin Dashboard</p>
             <h2>Platform Overview</h2>
             <div className="stat-grid">
-              <Stat title="Accounts" value={Object.keys(getAccounts()).length} />
+              <Stat title="Registered Accounts" value={Object.keys(getAccounts()).length} />
               <Stat title="Current User" value={user ? user.name : "Guest"} />
               <Stat title="Theme" value={darkMode ? "Dark" : "Light"} />
             </div>
-            <p className="muted">Demo admin dashboard using local browser data.</p>
+            <p className="subtitle">Demo admin dashboard using local browser data.</p>
           </section>
         </main>
       )}
@@ -583,38 +617,33 @@ export default function App() {
   );
 }
 
-function CountUp({ target }) {
-  const [value, setValue] = useState(0);
-
-  useEffect(() => {
-    let start = 0;
-    const timer = setInterval(() => {
-      start += Math.max(1, Math.ceil(target / 40));
-      if (start >= target) {
-        setValue(target);
-        clearInterval(timer);
-      } else {
-        setValue(start);
-      }
-    }, 20);
-    return () => clearInterval(timer);
-  }, [target]);
-
-  return <>{value}</>;
-}
-
 function Progress({ label, value }) {
   return (
-    <div className="progress-item">
-      <div className="progress-label"><span>{label}</span><strong>{value}/100</strong></div>
-      <div className="progress-track"><div className="progress-fill" style={{ "--target-width": `${value}%` }}></div></div>
+    <div className="progress">
+      <div className="progress-label">
+        <span>{label}</span>
+        <strong>{value}/100</strong>
+      </div>
+      <div className="track">
+        <div className="fill" style={{ width: `${value}%` }} />
+      </div>
+    </div>
+  );
+}
+
+function Feature({ number, title, text }) {
+  return (
+    <div className="card">
+      <span className="feature-number">{number}</span>
+      <h3>{title}</h3>
+      <p>{text}</p>
     </div>
   );
 }
 
 function Stat({ title, value }) {
   return (
-    <div className="panel stat-card">
+    <div className="panel stat">
       <p>{title}</p>
       <h3>{value}</h3>
     </div>
@@ -623,5 +652,5 @@ function Stat({ title, value }) {
 
 function avgMetric(results, key) {
   if (!results.length) return 0;
-  return Math.round(results.reduce((sum, item) => sum + item.analysis[key], 0) / results.length);
+  return Math.round(results.reduce((s, r) => s + r.analysis[key], 0) / results.length);
 }
